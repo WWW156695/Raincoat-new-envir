@@ -24,7 +24,7 @@ class HAR():
         self.dropout = 0.5
         self.num_classes = 6
         self.fourier_modes = 64
-        self.out_dim = 192
+        self.out_dim = 256
         # CNN and RESNET features
         
         self.mid_channels = 64
@@ -114,7 +114,7 @@ class WISDM(object):
         # features
         self.mid_channels = 64
         self.final_out_channels = 128
-        self.out_dim = 192
+        self.out_dim = 256
         self.features_len = 1
 
         # TCN features

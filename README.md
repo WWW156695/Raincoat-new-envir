@@ -25,18 +25,21 @@ cd Raincoat
 
 ### 2: Set Up Environment
 
-To install the core environment dependencies of Raincoat, use requirement.txt:
 ```
-pip: -r requirements.txt
-```
+# 创建Python 3.10虚拟环境（最稳定版本）
+conda create -n raincoat python=3.10 -y
 
-    - Python3
-    - Pytorch==1.7
-    - Numpy==1.20.1
-    - scikit-learn==0.24.1
-    - Pandas==1.2.4
-    - skorch==0.10.0 
-    - openpyxl==3.0.7 
+# 激活环境
+conda activate raincoat
+
+# 安装PyTorch 2.2.2 + CUDA 12.1（RTX 5060 最佳匹配）
+pip3 install torch==2.2.2 torchvision==0.17.2 torchaudio==2.2.2 --index-url https://download.pytorch.org/whl/cu121
+
+# 一键安装所有依赖，版本完全锁定
+pip install -r requirement.txt
+```
+To install the core environment dependencies of Raincoat, use requirement.txt:
+
     
 ### 3: Download Datasets
 Create a folder and download the pre-processed versions of the datasets [WISDM](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/KJWE5B), [HAR](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/0SYHTZ), [HHAR](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/OWDFXO), [Boiler](https://researchdata.https://github.com/DMIRLAB-Group/SASA/tree/main/datasets/Boiler), and [Sleep-EDF](https://researchdata.ntu.edu.sg/dataset.xhtml?persistentId=doi:10.21979/N9/UD1IM9).

@@ -7,8 +7,9 @@ import warnings
 import sklearn.exceptions
 warnings.filterwarnings("ignore", category=sklearn.exceptions.UndefinedMetricWarning)
 import collections
-
 from sklearn.metrics import classification_report, accuracy_score
+
+# 官方正确的导入（一个都不能少）
 from dataloader.dataloader import data_generator, few_shot_data_generator, generator_percentage_of_data
 from configs.data_model_configs import get_dataset_class
 from configs.hparams import get_hparams_class
@@ -19,8 +20,10 @@ from algorithms.RAINCOAT import RAINCOAT
 from models.models import get_backbone_class
 from algorithms.utils import AverageMeter
 from sklearn.metrics import f1_score
-torch.backends.cudnn.benchmark = True  
-np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)        
+
+torch.backends.cudnn.benchmark = True
+# 彻底删除原来的np.warnings那行，用上面的warnings代替
+warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
 class cross_domain_trainer(object):
     """
@@ -150,10 +153,10 @@ class cross_domain_trainer(object):
                         torch.save(self.algorithm.classifier.state_dict(), self.cpath)
                 acc, f1 = self.eval(final=True)
                 log = {'scenario':i,'run_id':run_id,'accuracy':acc,'f1':f1}
-                df_a = df_a.append(log, ignore_index=True)
+                df_a = pd.concat([df_a, pd.DataFrame([log])], ignore_index=True)
         mean_acc, std_acc, mean_f1, std_f1 = self.avg_result(df_a,'average_align.csv')
-        log = {'scenario':mean_acc,'run_id':std_acc,'accuracy':mean_f1,'f1':std_f1}
-        df_a = df_a.append(log, ignore_index=True)
+        log = {'scenario':'均值','run_id':'-','accuracy':mean_acc,'f1':mean_f1}
+        df_a = pd.concat([df_a, pd.DataFrame([log])], ignore_index=True)
         print(df_a)
         path =  os.path.join(self.exp_log_dir, 'average_align.csv')
         df_a.to_csv(path,sep = ',')
@@ -274,12 +277,12 @@ class cross_domain_trainer(object):
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
 
-    def avg_result(self, df, name):
-        mean_acc = df.groupby('scenario', as_index=False, sort=False)['accuracy'].mean()
-        mean_f1 = df.groupby('scenario', as_index=False, sort=False)['f1'].mean()
-        std_acc = df.groupby('run_id', as_index=False, sort=False)['accuracy'].mean()
-        std_f1 =  df.groupby('run_id', as_index=False, sort=False)['f1'].mean()
-        return mean_acc.mean().values, std_acc.std().values, mean_f1.mean().values, std_f1.std().values
-
-    
+    def avg_result(self, df_a, save_name):
+    # 仅计算数值列，避免字符串报错
+        df_numeric = df_a[['accuracy', 'f1']].apply(pd.to_numeric, errors='coerce')
+        mean_acc = df_numeric['accuracy'].mean()
+        std_acc = df_numeric['accuracy'].std()
+        mean_f1 = df_numeric['f1'].mean()
+        std_f1 = df_numeric['f1'].std()
+        return mean_acc, std_acc, mean_f1, std_f1
         

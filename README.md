@@ -19,7 +19,7 @@ The transfer of models trained on labeled datasets from a source domain to unlab
 First, clone the GitHub repository:
 
 ```
-git clone https://github.com/mims-harvard/Raincoat
+git clone [https://github.com/mims-harvard/Raincoat](https://github.com/WWW156695/Raincoat-new-adapter.git)
 cd Raincoat
 ```
 
@@ -104,12 +104,7 @@ The experiments are organised in a hierarchical way such that:
 To train a model:
 
 ```
-python main.py  --experiment_description WISDM  \
-                --run_description W_RAINCOAT \
-                --da_method RAINCOAT \
-                --dataset WISDM \
-                --backbone CNN \
-                --num_runs 5 \
+python main.py --dataset WISDM --da_method RAINCOAT --backbone CNN --data_path ./data --experiment_description WISDM_run --device cuda:0
 ```
 
 
